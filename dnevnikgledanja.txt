@@ -1,5 +1,0 @@
-drop database if exists dnevnikgledanja;
-create database dnevnikgledanja;
-
-use dnevnikgledanja;
-
