@@ -33,7 +33,7 @@ img {
 /*----------------------------------------header-styles---------------------------------------*/
 #header {
 	background: url(../images/bg-transparent1.png) repeat;
-	margin: 0 0 65px 0;
+	margin: 0 0 25px 0;
 	min-height: 60px;
 	padding: 0 0 0 0;
 	width: auto;
@@ -524,14 +524,14 @@ img {
 	max-width: 2000px;
 	width: 1250px;
 	overflow: hidden;
-	padding: 65px 0 40px;
+	padding: 0;
 	height: 650px;
 	background:rgba(78,95,98,0.5);
 	border-style: solid;
 	border-width: 1px;
 	border-radius: 8px;
 	position: relative;
-	right: 125px;
+	right: 250px;
 	
 }
 #body.about .header div h1, #body .header div h1 {
@@ -758,12 +758,12 @@ img {
 #body .header {
 	margin: 0 auto;
 	padding: 0;
-	width: 1000px;
+	width: 2000px;
 }
 #body .header div ul {
 	display: inline-block;
-	max-width: 1500px;
-	width: 1500px;
+	max-width: 2000px;
+	width: 2000px;
 	list-style: none outside none;
 	margin: 0;
 	padding: 3px 600px 50px 0;
@@ -1252,7 +1252,7 @@ img {
 #body .header div form {
 	display: block;
 	margin: 0 auto;
-	padding: 0;
+	padding: 25px 0 0 0;
 	width: 461px;
 }
 #body .header div form input {
@@ -1440,20 +1440,20 @@ img {
 	position: absolute;
 	visibility: hidden;
 	top: 2px;
-	right: -18px;
+	left: 136px;
 	width: 117px;
 }
 
 #second {
 	position: absolute;
-	left: 270px;
+	left: 390px;
 	visibility: hidden;
 	width: 117px;
 }
 
 #third {
 	position: absolute;
-	left: 384px;
+	left: 504px;
 	visibility: hidden;
 	width: 117px;
 	right: 5px;
@@ -1471,46 +1471,46 @@ img {
 }
 
 #lnr {
-	left: 155px;
+	left: 275px;
 }
 
 #sngh {
-	left: 200px;
+	left: 315px;
 }
 
 #abys {
-	left: 220px;
+	left: 355px;
 }
 
 #vet {
-	left: 155px;
+	left: 275px;
 }
 
 #mag {
-	left: 200px;
+	left: 315px;
 }
 
 #vnr {
-	left: 220px;
+	left: 355px;
 }
 
 #first1 {
 	position: absolute;
-	left: 587px;
+	left: 702px;
 	visibility: hidden;
 	width: 117px;
 }
 
 #second1 {
 	position: absolute;
-	left: 700px;
+	left: 815px;
 	visibility: hidden;
 	width: 117px;
 }
 
 #third1 {
 	position: absolute;
-	left: 814px;
+	left: 929px;
 	visibility: hidden;
 }
 
@@ -1527,21 +1527,21 @@ img {
 
 #first2 {
 	position: absolute;
-	left: 990px;
+	left: 1125px;
 	visibility: hidden;
 	width: 117px;
 }
 
 #second2 {
 	position: absolute;
-	left: 1104px;
+	left: 1239px;
 	visibility: hidden;
 	width: 117px;
 }
 
 #third2 {
 	position: absolute;
-	left: 1219px;
+	left: 1354px;
 	visibility: hidden;
 }
 
@@ -1558,7 +1558,7 @@ img {
 
 #first3 {
 	position: absolute;
-	left: 155px;
+	left: 275px;
 	bottom: 180px;
 	visibility: hidden;
 	width: 117px;
@@ -1566,7 +1566,7 @@ img {
 
 #second3 {
 	position: absolute;
-	left: 270px;
+	left: 390px;
 	bottom: 180px;
 	visibility: hidden;
 	width: 117px;
@@ -1574,7 +1574,7 @@ img {
 
 #third3 {
 	position: absolute;
-	left: 384px;
+	left: 504px;
 	bottom: 180px;
 	visibility: hidden;
 }
@@ -1592,7 +1592,7 @@ img {
 
 #first4 {
 	position: absolute;
-	left: 587px;
+	left: 700px;
 	bottom: 180px;
 	visibility: hidden;
 	width: 117px;
@@ -1600,7 +1600,7 @@ img {
 
 #second4 {
 	position: absolute;
-	left: 700px;
+	left: 814px;
 	bottom: 180px;
 	visibility: hidden;
 	width: 117px;
@@ -1608,7 +1608,7 @@ img {
 
 #third4 {
 	position: absolute;
-	left: 814px;
+	left: 929px;
 	bottom: 180px;
 	visibility: hidden;
 }
@@ -1626,7 +1626,7 @@ img {
 
 #first5 {
 	position: absolute;
-	left: 990px;
+	left: 1125px;
 	bottom: 180px;
 	visibility: hidden;
 	width: 117px;
@@ -1634,7 +1634,7 @@ img {
 
 #second5 {
 	position: absolute;
-	left: 1104px;
+	left: 1240px;
 	bottom: 180px;
 	visibility: hidden;
 	width: 117px;
@@ -1642,7 +1642,7 @@ img {
 
 #third5 {
 	position: absolute;
-	left: 1219px;
+	left: 1355px;
 	bottom: 180px;
 	visibility: hidden;
 }
@@ -1711,29 +1711,94 @@ img {
 	background: rgba(78,95,98,0.5);
 }
 
+td {
+	height: 50px;
+}
+
+.row {
+	position: relative;
+	right: 200px;
+}
+
+#body > div > div > ul > li > div > div > div > table > tbody > tr:nth-child(1) > td:nth-child(1){
+	height: 50px;
+}
+
+#body > div > div > ul > li > div > div > div > table > tbody > tr {
+	height: 50px;
+}
+
+
+#body > div > div > ul > li > div > div > div > table > tbody > tr:nth-child(1)
+
+#body .header {
+	max-width: 2000px;
+	width: 2000px;
+}
+
+#body > div > div {
+	right: 250px;
+	margin: 100%;
+}
+
+#body > div > div > ul > li > div > div {
+	width: 2000px;
+}
 
 
 
+.tablica {
+	position: absolute;
+	right: 150px;
+	left: 250px;
+	margin: 0;
+	overflow: hidden;
+	padding: 0;
+	width: 1900px;
+	max-width: 2500px;
+	font-size: 16px;
+}
 
+.tname {
+	min-width: 200px;
+	max-width: 200px;
+	width: 15%;
+}
 
+.tclass {
+	min-width: 50px;
+	max-width: 100px;
+	width: 10%;
+}
 
+.ttype {
+	min-width: 100px;
+	max-width: 100px;
+	width: 10%;
+}
 
+.tmana{
+	min-width: 100px;
+	max-width: 100px;
+	width: 10%;
+}
 
+.tah {
+	min-width: 100px;
+	max-width: 100px;
+	width: 15%;
+}
 
+.trarity {
+	min-width: 100px;
+	max-width: 100px;
+	width: 45%;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+.tabl {
+     position: relative;
+     
+  }
 
 
 
