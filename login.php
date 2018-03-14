@@ -20,12 +20,12 @@
 				<form class="log-in-form" action="autoriziraj.php" method="post">
 				  <h4 class="text-center">Unesite Vaše podatke</h4>
 				  <label>Email
-				    <input type="email" name="email" placeholder="mario@edunova.hr"
+				    <input type="email" name="email" placeholder="dlyst@edunova.hr"
 				    value="<?php if(isset($_GET["email"])){
 				    	echo $_GET["email"];
 				    }else{
 				    	if($dev){
-				    		echo "mario@edunova.hr";
+				    		echo "dlyst@edunova.hr";
 				    	}
 				    }
 					
