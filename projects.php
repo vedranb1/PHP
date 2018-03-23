@@ -6,6 +6,9 @@
 	<?php include_once 'include/header.php'; ?>
 </head>
 <body>
+	<?php
+		$klasa;
+		?>
 	<div id="page">
 		<?php include_once 'include/izbornik.php'; ?>
 		<div id="body">
@@ -16,11 +19,9 @@
 						<li>
 							<div>
 								<a class="thumb" href="#"><img src="images/LyonarCrest.png" id="lnr" alt="" align="left"><span class="thumbf">
-								<span id="first"><img src="images/argeonn.png" alt=""></span></span><span id="firstf">
-								<img src="images/argeonn.png" alt=""></span><span id="second"><img src="images/zirann.png" alt="">
-								</span><span id="secondf"><img src="images/zirann.png" alt=""></span>
-								<span id="third"><img src="images/bromee.png" alt=""></span><span id="thirdf">
-								<img src="images/bromee.png" alt=""></span></a>
+								<span id="first"><img class="argeon" src="images/argeonn.png" alt=""></span><span id="firstf">
+								</span><span id="second"><img src="images/zirann.png" alt="">
+								</span></span><span id="third"><img src="images/bromee.png" alt=""></span><span id="thirdf"></span></a>
 								<a class="thumb" href="#"><img src="images/SonghaiCrest.png" id="sngh" alt="" align="left"><span id="first1">
 								<img src="images/kaleoss.png" alt=""></span><span id="second1"><img src="images/revaa.png" alt=""></span>
 								<span id="third1"><img src="images/shidaii.png" alt=""></span></a>
@@ -61,5 +62,6 @@
 			</div>
 		</div>
 	</div>
+	 <?php include_once 'include/skripte.php'; ?>
 </body>
 </html>

@@ -2,6 +2,7 @@
 provjeraOvlasti(); ?>
 <?php $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1; ?>
 <?php 
+	$izraz=$veza->prepare("delete from deck where naziv='-'");
 	$sifra = $_SESSION[$appID."autoriziran"]->sifra;
 	$izraz=$veza->prepare("insert into deck values (null, '-', :sifra)");
 	$izraz->bindValue("sifra", $sifra, PDO::PARAM_INT);
@@ -67,7 +68,6 @@ provjeraOvlasti(); ?>
 										<th>Attack / Health</th>
 										<th>Rarity</th>
 										<th><i class="fas fa-plus-square"></i></th>
-										<th><i class="fas fa-minus-square"></i></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -78,18 +78,17 @@ provjeraOvlasti(); ?>
 									?>
 											<tr>
 												<td class="forcedwidth"><?php echo mb_strimwidth($red->naziv, 0, 30, "..."); ?></td>
-												<td><?php echo $red->mana; ?></td>
-												<td><?php echo $red->stats; ?></td>
-												<td><?php echo $red->rarity; ?></td>
-												<th><a href="dodaj.php?sifra=<?php echo $red->sifra; ?>"><i class="fas fa-plus-square"></i></a></th>
-												<th><a href="ukloni.php?sifra=<?php echo $red->sifra; ?>"><i class="fas fa-minus-square"></i></a></th>
+												<td class="mana"><?php echo $red->mana; ?></td>
+												<td class="stats"><?php echo $red->stats; ?></td>
+												<td class="rarity"><?php echo $red->rarity; ?></td>
+												<td class="dodaj"><a class="dodajKartu" id="dk_<?php echo $red->sifra; ?>" href="#"><i class="fas fa-plus-square"></i></a></th>
 											</tr>
 											
 										<?php endforeach; ?>
 											
 										</tbody>
 							</table>
-							<table class="add" style="width: 50%; float:left;">
+							<table id="inDeck" class="add" style="width: 50%; float:left;">
 								<thead>
 									<tr>
 										<th>Name</th>
@@ -97,7 +96,7 @@ provjeraOvlasti(); ?>
 										<th>Attack / Health</th>
 										<th>Rarity</th>
 										<th><i class="fas fa-plus-square"></i></th>
-										<th><i class="fas fa-minus-square"></i></th>
+										<th class="ukloni"><i class="fas fa-minus-square"></i></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -113,11 +112,11 @@ provjeraOvlasti(); ?>
 									?>
 									<tr>
 										<td><?php echo mb_strimwidth($red->naziv, 0, 30, "..."); ?></td>
-										<td><?php echo $red->mana; ?></td>
-										<td><?php echo $red->stats; ?></td>
-										<td><?php echo $red->rarity; ?></td>
-										<th><a href="dodaj.php?sifra=<?php echo $red->sifra; ?>"><i class="fas fa-plus-square"></i></a></th>
-										<th><a href="ukloni.php?sifra=<?php echo $red->sifra; ?>"><i class="fas fa-minus-square"></i></a></th>
+										<td class="mana"><?php echo $red->mana; ?></td>
+										<td class="stats"><?php echo $red->stats; ?></td>
+										<td class="rarity"><?php echo $red->rarity; ?></td>
+										<td class="dodaj"><a class="dodajKartu" id="dk_<?php echo $red->sifra; ?>_<?php echo $red->naziv; ?>_<?php echo $red->mana; ?>_<?php echo $red->stats; ?>_<?php echo $red->rarity; ?>" href="#"><i class="fas fa-plus-square"></i></a></th>
+										<td class="ukloni"><a class="ukloniKartu" id="uk_<?php echo $red->sifra; ?>" href="#"><i class="fas fa-minus-square"></i></a></th>
 									</tr>
 									<?php endforeach; ?>
 								</tbody>
@@ -127,5 +126,54 @@ provjeraOvlasti(); ?>
 			</div>
 	</div>
     <?php include_once 'include/skripte.php'; ?>
+    <script>
+    
+    	var sifraKarte;
+    	var nazivKarte;
+    	var manaKarte;
+    	var statsKarte;
+    	var rarityKarte;
+    	var dodaj;
+    	var ukloni;
+    	
+    	$(".dodajKartu").click(function(){
+    		
+			sifraKarte = $(this).attr("id").split("_")[1];
+    		nazivKarte = $(this).parent().parent().find("td:first").html();
+    		manaKarte = $(this).parent().parent().find(".mana").html();
+    		statsKarte = $(this).parent().parent().find(".stats").html();
+    		rarityKarte = $(this).parent().parent().find(".rarity").html();
+    		dodaj = $(this).parent().parent().find(".dodaj").html();
+    		ukloni = $(this).parent().parent().parent().parent().parent().find(".ukloni").html();
+    		
+    		$.ajax({
+			  type: "POST",
+			  url: "dodaj.php",
+			  data: "sifraKarte=" + sifraKarte,
+			  success: function(vratioServer){
+			  	 $("#inDeck > tbody").append("<tr><td>" + nazivKarte + "</td>" + "<td>" + manaKarte + "</td>" + "<td>" + statsKarte + "</td>"
+			  	  + "<td>" + rarityKarte + "</td>" + "<td>" + dodaj + "</td>" + "<td>" + ukloni + "</td></tr>");
+			  }
+			});
+    	return false;
+    	})
+    	
+    	$(".ukloniKartu").click(function(){
+    		
+			sifraKarte = $(this).attr("id").split("_")[1];
+    		var stavka = $(this);
+    		$.ajax({
+			  type: "POST",
+			  url: "ukloni.php",
+			  data: "sifraKarte=" + sifraKarte,
+			  success: function(vratioServer){
+			  	stavka.parent().parent().remove();
+			  }
+			});
+    	return false;
+    	})
+    	
+    	
+    </script>
   </body>
 </html>
