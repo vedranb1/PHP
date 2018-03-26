@@ -83,16 +83,16 @@ provjeraOvlasti(); ?>
 												<td class="dodaj">
 													<?php 
 														$sifK=$red->sifra;
-														$izrazz=$veza->prepare("select count(a.sifra)
-														from karta a inner join karta_deck b on a.sifra=b.karta
-														where sifra=:sifraKarte;");
+														$izrazz=$veza->prepare("select deck, count(karta) as ukupno 
+														from karta_deck where karta=:sifraKarte group by deck;");
 														$izrazz->bindValue("sifraKarte", $sifK, PDO::PARAM_INT);
 														$izrazz->execute();
-														$brojKarata=$izraz->fetchColumn();
-														if($brojKarata==3): ?>
-													<a style="opacity: 0.6; cursor: not-allowed;" class="dodajKartu" id="dk_<?php echo $red->sifra; ?>" href="#"><i class="fas fa-plus-square"></i></a></th>
+														$rez=$izrazz->fetch(PDO::FETCH_OBJ);
+														error_reporting(E_ERROR);
+														if($rez->ukupno==3): ?>
+													<a style="opacity: 0.6; cursor: not-allowed;" class="dodajKartu" id="dk_<?php echo $rez->deck; ?>_<?php echo $red->sifra; ?>" href="#"><i class="fas fa-plus-square"></i></a></th>
 													<?php endif; ?> 
-													<a class="dodajKartu" id="dk_<?php echo $red->sifra; ?>" href="#"><i class="fas fa-plus-square"></i></a></th>
+													<a class="dodajKartu" id="dk_<?php echo $rez->deck; ?>_<?php echo $red->sifra; ?>" href="#"><i class="fas fa-plus-square"></i></a></th>
 											</tr>
 											
 										<?php endforeach; ?>
@@ -112,7 +112,7 @@ provjeraOvlasti(); ?>
 								</thead>
 								<tbody>
 									<?php 
-									$izraz = $veza->prepare("select c.sifra, c.naziv, c.mana, concat_ws(' / ', c.attack, c.health) as stats, c.rarity
+									$izraz = $veza->prepare("select c.sifra, b.deck as sifraDeck, c.naziv, c.mana, concat_ws(' / ', c.attack, c.health) as stats, c.rarity
 									from deck a inner join karta_deck b on a.sifra=b.deck
 									inner join karta c on b.karta=c.sifra
 									where a.sifra=1;
@@ -122,12 +122,12 @@ provjeraOvlasti(); ?>
 									foreach ($inDeck as $red): 
 									?>
 									<tr>
-										<td><?php echo mb_strimwidth($red->naziv, 0, 30, "..."); ?></td>
+										<td class="naziv"><?php echo mb_strimwidth($red->naziv, 0, 30, "..."); ?></td>
 										<td class="mana"><?php echo $red->mana; ?></td>
 										<td class="stats"><?php echo $red->stats; ?></td>
 										<td class="rarity"><?php echo $red->rarity; ?></td>
-										<td class="dodaj"><a class="dodajKartu" id="dk_<?php echo $red->sifra; ?>_<?php echo $red->naziv; ?>_<?php echo $red->mana; ?>_<?php echo $red->stats; ?>_<?php echo $red->rarity; ?>" href="#"><i class="fas fa-plus-square"></i></a></td>
-										<td class="ukloni"><a class="ukloniKartu" id="uk_<?php echo $red->sifra; ?>" href="#"><i class="fas fa-minus-square"></i></a></td>
+										<td class="dodaj"><a class="dodajKartu" id="dk_<?php echo $red->sifraDeck; ?>_<?php echo $red->sifra; ?>" href="#"><i class="fas fa-plus-square"></i></a></td>
+										<td class="ukloni"><a class="ukloniKartu" id="uk_<?php echo $red->sifraDeck; ?>_<?php echo $red->sifra; ?>" href="#"><i class="fas fa-minus-square"></i></a></td>
 									</tr>
 									<?php endforeach; ?>
 								</tbody>
@@ -140,6 +140,7 @@ provjeraOvlasti(); ?>
     <script>
     
     	var sifraKarte;
+    	var sifraDeck;
     	var nazivKarte;
     	var manaKarte;
     	var statsKarte;
@@ -155,7 +156,9 @@ provjeraOvlasti(); ?>
             
             $(".dodajKartu").click(function(){
     		
-			sifraKarte = $(this).attr("id").split("_")[1];
+			
+			sifraDeck = $(this).attr("id").split("_")[1];
+			sifraKarte = $(this).attr("id").split("_")[2];
     		nazivKarte = $(this).parent().parent().find("td:first").html();
     		manaKarte = $(this).parent().parent().find(".mana").html();
     		statsKarte = $(this).parent().parent().find(".stats").html();
@@ -165,11 +168,17 @@ provjeraOvlasti(); ?>
     		$.ajax({
 			  type: "POST",
 			  url: "dodaj.php",
-			  data: "sifraKarte=" + sifraKarte,
+			  data: "sifraKarte=" + sifraKarte + "&sifraDeck=" + sifraDeck,
 			  success: function(vratioServer){
-			  	 $("#inDeck > tbody").append("<tr><td class=\"naziv\">" + nazivKarte + "</td>" + "<td class=\"mana\">" + manaKarte + "</td>" + "<td class=\"stats\">" + statsKarte + "</td>"
-			  	  + "<td class=\"rarity\">" + rarityKarte + "</td>" + "<td class=\"dodaj\"><a class=\"dodajKartu\" id=\"dk_<?php echo $red->sifra; ?>_" + nazivKarte + "_<?php echo $red->mana; ?>_<?php echo $red->stats; ?>_<?php echo $red->rarity; ?>\" href=\"#\"><i class=\"fas fa-plus-square\"></i></a></td>" + "<td class=\"ukloni\"><a class=\"ukloniKartu\" id=\"uk_<?php echo $red->sifra; ?>\" href=\"#\"><i class=\"fas fa-minus-square\"></i></a></td></tr>");
+			  	if(vratioServer==="OK"){
+			  		 $("#inDeck > tbody").append("<tr><td class=\"naziv\">" + nazivKarte + "</td>" + "<td class=\"mana\">" + manaKarte + "</td>" + "<td class=\"stats\">" + statsKarte + "</td>"
+			  	  + "<td class=\"rarity\">" + rarityKarte + "</td>" + "<td class=\"dodaj\"><a class=\"dodajKartu\" id=\"dk_" + sifraKarte + "\" href=\"#\"><i class=\"fas fa-plus-square\"></i></a></td>" + 
+			  	  "<td class=\"ukloni\"><a class=\"ukloniKartu\" id=\"uk_" + sifraKarte + "\" href=\"#\"><i class=\"fas fa-minus-square\"></i></a></td></tr>");
                   definirajDogadaj();
+			  	}else{
+			  		alert(vratioServer);
+			  	}
+			  	
 			  }
 			});
     	return false;
