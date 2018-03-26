@@ -52,7 +52,17 @@ provjeraOvlasti(); ?>
 						?>		
 	<div id="body">
 			<div class="header">
+				<ul class="dropdown menu" data-dropdown-menu>
+  <li>
+    <a href="#">Select a deck</a>
+    <ul class="menu">
+      <li><a href="#">Item 1A</a></li>
+      <!-- ... -->
+    </ul>
+  </li>
+</ul>
 				<div class="tabl">
+					
 					<form method="get">
 								<input type="text" name="uvjet" 
 								placeholder="uvjet pretraživanja"
@@ -91,8 +101,10 @@ provjeraOvlasti(); ?>
 														error_reporting(E_ERROR);
 														if($rez->ukupno==3): ?>
 													<a style="opacity: 0.6; cursor: not-allowed;" class="dodajKartu" id="dk_<?php echo $rez->deck; ?>_<?php echo $red->sifra; ?>" href="#"><i class="fas fa-plus-square"></i></a></th>
-													<?php endif; ?> 
+													<?php else:?>
 													<a class="dodajKartu" id="dk_<?php echo $rez->deck; ?>_<?php echo $red->sifra; ?>" href="#"><i class="fas fa-plus-square"></i></a></th>
+													<?php 
+													endif; ?> 
 											</tr>
 											
 										<?php endforeach; ?>
