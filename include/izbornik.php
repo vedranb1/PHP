@@ -12,7 +12,7 @@
 						<a href="projects.php">Projects</a>
 					</li>
 					<li class="menu">
-						<a href="blog.php">Browse Cards</a> 
+						<a href="browse.php">Browse Cards</a> 
 					</li>
 					<li>
 					<!--	<a href="builder.php">Deck Builder</a>-->
