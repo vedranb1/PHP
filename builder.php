@@ -3,6 +3,27 @@ provjeraOvlasti(); ?>
 <?php $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1; ?>
 <?php 
 	$sifra = $_SESSION[$appID."autoriziran"]->sifra;
+	if(isset($_GET["general"])){
+		$sifraGeneral=$_GET["general"];
+		$izraz=$veza->prepare("insert into deck values (null, 'New Deck', :sifra);");
+		$izraz->bindValue("sifra", $sifra, PDO::PARAM_INT);
+		$izraz->execute();
+		$izraz=$veza->prepare("select max(sifra) from deck;");
+		$izraz->execute();
+		$odabranDeck=$izraz->fetchColumn();
+		$izraz=$veza->prepare("insert into karta_deck values (:sifraGeneral, :odabranDeck);");
+		$izraz->bindValue("sifraGeneral", $sifraGeneral, PDO::PARAM_INT);
+		$izraz->bindValue("odabranDeck", $odabranDeck, PDO::PARAM_INT);
+		$izraz->execute();
+		$izraz=$veza->prepare("select b.sifra
+		from karta a inner join klasa b on a.klasa=b.sifra
+		where a.sifra=:sifraGeneral;");
+		$izraz->bindValue("sifraGeneral", $sifraGeneral, PDO::PARAM_INT);
+		$izraz->execute();
+		$klasa=$izraz->fetchColumn();
+		$_SESSION["traziKlasu"]=$klasa;
+	}
+	$klasa=$_SESSION["traziKlasu"];
 ?>
 <!doctype html>
 <html class="no-js" lang="en" dir="ltr">
@@ -37,9 +58,10 @@ provjeraOvlasti(); ?>
 						$izraz = $veza->prepare("select b.sifra, b.naziv, c.naziv as klasa, a.naziv as tip, b.mana, concat_ws(' / ', b.attack, b.health) as stats, b.rarity
 						from tip a inner join karta b on a.sifra=b.tip inner join klasa c on b.klasa=c.sifra 
 						where concat(b.naziv, c.naziv, a.naziv, b.mana, concat_ws(' / ', b.attack, b.health), b.rarity)
-						like :uvjet group by b.naziv, c.naziv, a.naziv, b.mana, stats, b.rarity 
-						order by b.naziv limit :stranica, :brojRezultataPoStranici;
+						like :uvjet and (c.sifra=:klasa or c.sifra=7) group by b.naziv, c.naziv, a.naziv, b.mana, stats, b.rarity 
+						order by b.mana limit :stranica, :brojRezultataPoStranici;
 						");
+						$izraz->bindValue("klasa", $klasa, PDO::PARAM_INT);
 						$izraz->bindValue("stranica", $stranica * $brojRezultataPoStranici -  $brojRezultataPoStranici , PDO::PARAM_INT);
 						$izraz->bindValue("brojRezultataPoStranici", $brojRezultataPoStranici, PDO::PARAM_INT);
 						$izraz->bindParam("uvjet", $uvjet);
@@ -50,7 +72,8 @@ provjeraOvlasti(); ?>
 	<div id="body">
 			<div class="header">
 				<ul class="dropdown menu" data-dropdown-menu>
-  <li>
+  
+   <li>
     <a href="#">Select a deck</a>
     <ul class="menu">
     	<?php
@@ -58,22 +81,33 @@ provjeraOvlasti(); ?>
 		$izrazDeck->execute();
 		$decks=$izrazDeck->fetchAll(PDO::FETCH_OBJ);
 		foreach ($decks as $redDeck):
-    	?>
+   	 ?>
       <li><a href="builder.php?sifra=<?php echo $redDeck->sifra; ?>"><?php echo $redDeck->naziv; ?></a></li>
       <!-- ... -->
     </ul>
-    <?php $odabranDeck=$_GET["sifra"]; ?>
     <?php endforeach;  ?>
-  </li>
-</ul>
+   </li>
+    <?php if(!isset($_GET["sifra"])){
+		$izraz=$veza->prepare("select max(sifra) from deck;");
+		$izraz->execute();
+		$odabranDeck=$izraz->fetchColumn();
+	} else{
+    $odabranDeck=$_GET["sifra"];
+	}
+ 	?>
+    
+	</ul>
+
+
 				<div class="tabl">
-					
+					<div style="width: 1900px; height: 100px;">
+							
 					<form method="get">
 								<input type="text" name="uvjet" 
 								placeholder="uvjet pretraživanja"
 								value="<?php echo isset($_GET["uvjet"]) ? $_GET["uvjet"] : "" ?>" />
 							</form>
-						
+						</div>
 							<table class="add" style="width: 50%; float: left; ">
 								<thead>
 									<tr>
