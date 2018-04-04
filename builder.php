@@ -22,6 +22,8 @@ provjeraOvlasti(); ?>
 		$izraz->execute();
 		$klasa=$izraz->fetchColumn();
 		$_SESSION["traziKlasu"]=$klasa;
+		unset($_GET["general"]);
+		header("LOCATION: builder.php?sifra=" . $odabranDeck);
 	}
 	$klasa=$_SESSION["traziKlasu"];
 ?>
@@ -83,9 +85,9 @@ provjeraOvlasti(); ?>
 		foreach ($decks as $redDeck):
    	 ?>
       <li><a href="builder.php?sifra=<?php echo $redDeck->sifra; ?>"><?php echo $redDeck->naziv; ?></a></li>
-      <!-- ... -->
-    </ul>
+   
     <?php endforeach;  ?>
+     </ul>
    </li>
     <?php if(!isset($_GET["sifra"])){
 		$izraz=$veza->prepare("select max(sifra) from deck;");
@@ -93,6 +95,10 @@ provjeraOvlasti(); ?>
 		$odabranDeck=$izraz->fetchColumn();
 	} else{
     $odabranDeck=$_GET["sifra"];
+	$izraz=$veza->prepare("select naziv from deck where sifra=:sifraDeck;");
+	$izraz->bindValue("sifraDeck", $odabranDeck, PDO::PARAM_INT);
+	$izraz->execute();
+	$nazivDeck=$izraz->fetchColumn();
 	}
  	?>
     
@@ -184,7 +190,15 @@ provjeraOvlasti(); ?>
 									<?php endforeach; ?>
 								</tbody>
 							</table>
-					
+					<?php 
+					$odabranDeck=$_GET["sifra"];
+					$izraz=$veza->prepare("select naziv from deck where sifra=:sifraDeck;");
+					$izraz->bindValue("sifraDeck", $odabranDeck, PDO::PARAM_INT);
+					$izraz->execute();
+					$nazivDeck=$izraz->fetchColumn();
+					?>
+					<button type="button" class="success button" id="rn_<?php echo $_GET["sifra"]; ?>_<?php echo $nazivDeck ?>">Rename</button>
+					<button type="button" class="alert button" id="dl_<?php echo $_GET["sifra"]; ?>_<?php echo $nazivDeck ?>">Delete</button>
 				</div>
 			</div>
 	</div>
@@ -255,7 +269,22 @@ provjeraOvlasti(); ?>
         }
         
         definirajDogadaj();
-            
+        
+        $(".success button").click(function(){
+        	sifraDeck = $(this).attr("id").split("_")[1];
+        	nazivDeck = $(this).attr("id").split("_")[2];
+        	$.ajax({
+			  type: "POST",
+			  url: "promjeniNaziv.php",
+			  data: "sifraDeck=" + sifraDeck + "nazivDeck" + nazivDeck,
+			  success: function(vratioServer){
+			  	
+			  }
+			});
+    	return false;
+    	
+        });
+        
     </script>
   </body>
 </html>
