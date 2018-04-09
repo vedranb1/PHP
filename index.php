@@ -9,24 +9,17 @@
 		<?php include_once 'include/izbornik.php'; ?>
 	<div id="body" class="home">
 		<div class="header">
-			<div class="grid-x grid-padding-x">
-      			 <div class="large-12 cell">
-					<div class="callout">
-						<h1>Welcome to my site</h1>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at mauris pharetra, molestie dolor sed, 
-					  	luctus metus. Cras a lacus in quam auctor mattis tempor vel leo. Duis quis felis iaculis, viverra diam id,
-					   ullamcorper eros. Etiam viverra turpis nec tempus congue. Donec consequat augue placerat neque commodo, a
-					   semper urna posuere. Nam pretium arcu quis lobortis laoreet. Ut nec eros ut nulla dapibus ullamcorper
-					   posuere nec urna. Sed at nisl ornare nisi tincidunt vulputate vel id nunc. Quisque dolor odio, tempus a
-					   laoreet non, elementum a purus. Ut ut ante orci. Nulla commodo faucibus quam, sit amet pretium lacus maximus ut.
-					   Nunc quis nunc turpis. Nunc scelerisque sollicitudin lacinia. Phasellus et tellus mollis, luctus purus sit amet,
-					   malesuada felis. Vestibulum vel tincidunt risus. Morbi congue, justo at laoreet lobortis, lectus risus viverra
-					   orci, ut scelerisque felis purus et tellus. Vivamus sodales ultricies nulla. In viverra risus nisi, et blandit
-					   augue feugiat ac. Aliquam vel semper elit.</p>
-				</div>
+			<div class="index" style="position: absolute; height: 250px; max-width: 2000px;">
+				<h1 style="margin-left: 50px;">Welcome to Decklyst</h1>
+						<p style="margin-left: 50px;">
+							Decklyst is a site where you can build your own decks using cards from Duelyst card collection.
+							Click the 'Browse Cards' tab in the navigation bar to see all the cards available to you or start
+							building immediately by clicking the button below.
+						</p>
 			</div>
-		</div>
+		
 			</div>
+			<a href="selection.php" class="button" style="position: relative; top: 250px; margin-left: 650px; margin-top: 30px;">Start Building</a>
 		</div>
 		<?php include_once 'include/podnozje.php'; ?>
 	</div>

@@ -6,12 +6,12 @@ provjeraOvlasti();
 	$izraz->execute();
 	$provjera=$izraz->fetchColumn();
 	
-	if($provjera==4){
-		echo "Nije moguće ukloniti generala";
-	}else {
+	//if($provjera==4){
+	//	echo "Nije moguće ukloniti generala";
+	//}else {
 		$izraz=$veza->prepare("delete from karta_deck where karta=:sifraKarte and deck=:sifraDeck limit 1;");	
 		$izraz->execute($_POST);
 		echo "OK";
-	}
+	//}
 
 	

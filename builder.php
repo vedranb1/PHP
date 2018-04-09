@@ -25,7 +25,25 @@ provjeraOvlasti(); ?>
 		unset($_GET["general"]);
 		header("LOCATION: builder.php?sifra=" . $odabranDeck);
 	}
-	$klasa=$_SESSION["traziKlasu"];
+	if(isset($_SESSION["traziKlasu"])){
+		$klasa=$_SESSION["traziKlasu"];
+	}
+	if(!isset($_GET["sifra"])){
+		$izraz=$veza->prepare("select max(sifra) from deck;");
+		$izraz->execute();
+		$odabranDeck=$izraz->fetchColumn();
+	}
+	if(isset($_GET["sifra"])){
+		$odabranDeck=$_GET["sifra"];
+		}
+	$izraz=$veza->prepare("select karta from karta_deck where deck=:odabranDeck");
+	$izraz->bindValue("odabranDeck", $odabranDeck, PDO::PARAM_INT);
+	$izraz->execute();
+	$karta=$izraz->fetchColumn();
+	$izraz=$veza->prepare("select klasa from karta where sifra=:karta");
+	$izraz->bindValue("karta", $karta, PDO::PARAM_INT);
+	$izraz->execute();
+	$klasa=$izraz->fetchColumn();
 ?>
 <!doctype html>
 <html class="no-js" lang="en" dir="ltr">
@@ -99,6 +117,14 @@ provjeraOvlasti(); ?>
 	$izraz->bindValue("sifraDeck", $odabranDeck, PDO::PARAM_INT);
 	$izraz->execute();
 	$nazivDeck=$izraz->fetchColumn();
+	$izraz=$veza->prepare("select karta from karta_deck where deck=:odabranDeck");
+	$izraz->bindValue("odabranDeck", $odabranDeck, PDO::PARAM_INT);
+	$izraz->execute();
+	$karta=$izraz->fetchColumn();
+	$izraz=$veza->prepare("select klasa from karta where sifra=:karta");
+	$izraz->bindValue("karta", $karta, PDO::PARAM_INT);
+	$izraz->execute();
+	$klasa=$izraz->fetchColumn();
 	}
  	?>
     
@@ -197,11 +223,33 @@ provjeraOvlasti(); ?>
 					$izraz->execute();
 					$nazivDeck=$izraz->fetchColumn();
 					?>
-					<button type="button" class="success button" id="rn_<?php echo $_GET["sifra"]; ?>_<?php echo $nazivDeck ?>">Rename</button>
-					<button type="button" class="alert button" id="dl_<?php echo $_GET["sifra"]; ?>_<?php echo $nazivDeck ?>">Delete</button>
+					
 				</div>
+				
+				<a href="#" data-reveal-id="promjeniNaziv" type="button" class="promjeni" id="rn_<?php echo $_GET["sifra"]; ?>_<?php echo $nazivDeck ?>">Rename</a>
+				<a href="#" type="button" class="obrisi" id="dl_<?php echo $_GET["sifra"]; ?>_<?php echo $nazivDeck ?>">Delete</a>
+			<div id="promjeniNaziv" class="reveal" data-reveal>
+						  <p id="naslov"></p>
+						  
+						  <label for="name">Name</label>
+						  <input type="text" name="newName" id="newName"
+								placeholder=""
+								value="<?php echo $nazivDeck ?>" />
+						  <a href="#" class="success button expanded" id="rename">Rename</a>
+						  
+						 <button class="close-button" data-close aria-label="Close modal" type="button">
+						    <span aria-hidden="true">&times;</span>
+						 </button>
+						  
+					</div>
+					
 			</div>
+			
+			
 	</div>
+	
+					
+					
     <?php include_once 'include/skripte.php'; ?>
     <script>
     
@@ -211,6 +259,7 @@ provjeraOvlasti(); ?>
     	var manaKarte;
     	var statsKarte;
     	var rarityKarte;
+    	var nazivDeck;
     	var dodaj;
     	var ukloni;
     	
@@ -218,6 +267,7 @@ provjeraOvlasti(); ?>
     	
     	function definirajDogadaj(){
             
+            $("#rename").hide();
             $(".dodajKartu").off("click");
             
             $(".dodajKartu").click(function(){
@@ -270,20 +320,49 @@ provjeraOvlasti(); ?>
         
         definirajDogadaj();
         
-        $(".success button").click(function(){
+        $(".promjeni").click(function(){
+        	sifraDeck = $(this).attr("id").split("_")[1];
+        	nazivDeck = $(this).attr("id").split("_")[2];
+        	$("#naslov").html("Rename");
+        	$.ajax({
+			  type: "POST",
+			  url: "traziNaziv.php",
+			  data: "sifraDeck=" + sifraDeck + "nazivDeck=" + nazivDeck,
+			  success: function(vratioServer){
+			  	$("#name").html("");
+			  	$("#name").append(vratioServer);
+			  }
+			});
+    	$('#promjeniNaziv').foundation('open');
+    	$("#newName").change(function(){
+    		$("#rename").show();
+    	});
+    	$("#rename").click(function(){
+    		$.ajax({
+			  type: "POST",
+			  url: "promjeniNaziv.php",
+			  data: "newName=" + $("#newName").val() + "&sifraDeck=" + sifraDeck,
+			  success: function(vratioServer){
+			  	location.reload();
+			  }
+			});
+		$('#promjeniNaziv').foundation('close');
+    	});
+    	return false;
+        });
+        
+        $(".obrisi").click(function(){
         	sifraDeck = $(this).attr("id").split("_")[1];
         	nazivDeck = $(this).attr("id").split("_")[2];
         	$.ajax({
 			  type: "POST",
-			  url: "promjeniNaziv.php",
-			  data: "sifraDeck=" + sifraDeck + "nazivDeck" + nazivDeck,
+			  url: "obrisiDeck.php",
+			  data: "sifraDeck=" + sifraDeck + "&nazivDeck=" + nazivDeck,
 			  success: function(vratioServer){
-			  	
+			  	location.reload();
 			  }
 			});
-    	return false;
-    	
-        });
+        })
         
     </script>
   </body>
