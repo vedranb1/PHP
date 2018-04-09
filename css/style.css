@@ -40,7 +40,7 @@ img {
 	width: auto;
 }
 #header div {
-	margin: 0 100px;
+	margin: 0 50px;
 	max-width: auto;
 	min-height: 60px;
 	padding: 0 10px;
@@ -530,7 +530,6 @@ img {
 	background:rgba(78,95,98,0.5);
 	border-style: solid;
 	border-width: 1px;
-	border-radius: 8px;
 	position: relative;
 	right: 250px;
 	
