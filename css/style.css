@@ -1,19 +1,23 @@
 /* Website template by freewebsitetemplates.com */
 body {
-	margin: 0;
+	margin: 0 auto;
 	padding: 0;
 	position: relative;
 	width: auto;
+	float: none;
+	max-width: auto;
 }
 body #page {
 	background: url("../images/bg-home.jpg") no-repeat scroll center top #bbcce6;
 	background-size: 1500px 750px;
-	margin: 0;
+	margin: 0 auto;
 	overflow: hidden;
 	padding: 0;
-	width: 1500px;
+	width: auto;
 	height: auto;
 	z-index: 3;
+	float: none;
+	max-width: auto;
 }
 a {
 	text-decoration: none;
@@ -1865,11 +1869,58 @@ td {
 	height: 72px; 
   }
 
+.promjeni {
+      display: inline-block;
+	  vertical-align: middle;
+	  margin: 0 0 1rem 0;
+	  font-family: inherit;
+	  padding: 0.85em 1em;
+	  -webkit-appearance: none;
+	  border: 1px solid transparent;
+	  border-radius: 0;
+	  transition: background-color 0.25s ease-out, color 0.25s ease-out;
+	  font-size: 0.9rem;
+	  line-height: 1;
+	  text-align: center;
+	  cursor: pointer;
+	  background-color: #1779ba;
+      color: #1779ba; }
+  
 
+.obrisi {
+	display: inline-block;
+	  vertical-align: middle;
+	  margin: 0 0 1rem 0;
+	  font-family: inherit;
+	  padding: 0.85em 1em;
+	  -webkit-appearance: none;
+	  border: 1px solid transparent;
+	  border-radius: 0;
+	  transition: background-color 0.25s ease-out, color 0.25s ease-out;
+	  font-size: 0.9rem;
+	  line-height: 1;
+	  text-align: center;
+	  cursor: pointer;
+	  background-color: #1779ba;
+      color: #1779ba; }
 
-
-
-
+.dropdown menu {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 0 1rem 0;
+  font-family: inherit;
+  padding: 0.85em 1em;
+  -webkit-appearance: none;
+  border: 1px solid transparent;
+  border-radius: 0;
+  transition: background-color 0.25s ease-out, color 0.25s ease-out;
+  font-size: 0.9rem;
+  line-height: 1;
+  text-align: center;
+  cursor: pointer;
+  background-color: #1779ba;
+  color: #fefefe; 
+  }
 
 
 
