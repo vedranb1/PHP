@@ -12,13 +12,23 @@
 						<a href="<?php echo $putanjaAPP; ?>selection.php">Builder</a>
 					</li>
 					<li class="menu">
-						<a href="<?php echo $putanjaAPP; ?>browse.php">Browse Cards</a> 
+						<a href="<?php echo $putanjaAPP; ?>browse.php">Browse</a> 
 					</li>
 					<li class="menu">
-						<a href="<?php echo $putanjaAPP; ?>builder.php">Edit Decks</a> 
+						<a href="<?php echo $putanjaAPP; ?>builder.php">Edit</a> 
 					</li>
 					<li>
 						<a href="<?php echo $putanjaAPP; ?>era.php">ERA</a>
+					</li>
+					<li>
+						<?php if($_SESSION[$appID."autoriziran"]->uloga==="admin"): ?>
+							<a href="<?php echo $putanjaAPP; ?>privatno/karte/index.php">Karte</a>
+						<?php endif; ?>
+					</li>
+					<li>
+						<?php if($_SESSION[$appID."autoriziran"]->uloga==="admin"): ?>
+							<a href="<?php echo $putanjaAPP; ?>privatno/operateri/index.php">Oper</a>
+							<?php endif; ?>
 					</li>
 					<li>
 						<?php if($_SERVER["PHP_SELF"]!==$putanjaAPP . "login.php"): ?>

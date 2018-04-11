@@ -78,7 +78,7 @@ if(!isset($_GET["sifra"])){
 				
 			</div>
 		</div>
-		<?php include_once '../../include/podnozje.php'; ?>
+		
 		
       
     </div>

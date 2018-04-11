@@ -10,20 +10,54 @@ if(!isset($_GET["sifra"])){
 
 	if(count($greska)==0){
 		
+		if($_POST["klasa"]=="Lyonar"){
+			$_POST["klasa"]=1;
+		}elseif($_POST["klasa"]=="Songhai"){
+			$_POST["klasa"]=2;
+		}elseif($_POST["klasa"]=="Vetruvian"){
+			$_POST["klasa"]=3;
+		}elseif($_POST["klasa"]=="Magmar"){
+			$_POST["klasa"]=4;
+		}elseif($_POST["klasa"]=="Abyssian"){
+			$_POST["klasa"]=5;
+		}elseif($_POST["klasa"]=="Vanar"){
+			$_POST["klasa"]=6;
+		}else{
+			$_POST["klasa"]=7;
+		}
+		
+		if($_POST["tip"]=="Minion"){
+			$_POST["tip"]=1;
+		}elseif($_POST["tip"]=="Spell"){
+			$_POST["tip"]=2;
+		}elseif($_POST["tip"]=="Artifact"){
+			$_POST["tip"]=3;
+		}else{
+			$_POST["tip"]=4;
+		}
+		
+		if($_POST["attack"]==""){
+			$_POST["attack"]=null;
+		}
+		if($_POST["health"]==""){
+			$_POST["health"]=null;
+		}
+		
 		$veza->beginTransaction();
 		
-		$izraz=$veza->prepare("update karta set naziv=:naziv, klasa=:klasa, tip=:tip, mana=:mana, attack=:attack, health=:health 
+		$izraz=$veza->prepare("update karta set naziv=:naziv, klasa=:klasa, tip=:tip, mana=:mana, attack=:attack, health=:health,
 		rarity=:rarity where sifra=:sifra;");
 		$izraz->execute(
 			array(
+				"sifra" => $_POST["sifra"],
 				"naziv" => $_POST["naziv"],
 				"klasa" => $_POST["klasa"],
 				"tip" => $_POST["tip"],
 				"mana" => $_POST["mana"],
 				"attack" => $_POST["attack"],
 				"health" => $_POST["health"],
-				"rarity" => $_POST["rarity"],
-				"sifra" => $_POST["sifra"]
+				"rarity" => $_POST["rarity"]
+				
 			)
 		);
 		
@@ -91,7 +125,7 @@ if(!isset($_GET["sifra"])){
 				
 			</div>
 		</div>
-		<?php include_once '../../include/podnozje.php'; ?>
+		
 		
       
     </div>
