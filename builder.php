@@ -75,6 +75,13 @@ provjeraOvlasti(); ?>
 						if($ukupnoStranica>0 && $stranica>$ukupnoStranica){
 							$stranica=$ukupnoStranica;
 						}
+						if(isset($_GET["sifra"])){
+						$odabranDeck=$_GET["sifra"];
+						$izraz=$veza->prepare("select naziv from deck where sifra=:sifraDeck;");
+						$izraz->bindValue("sifraDeck", $odabranDeck, PDO::PARAM_INT);
+						$izraz->execute();
+						$nazivDeck=$izraz->fetchColumn();
+						}
 						$izraz = $veza->prepare("select b.sifra, b.naziv, c.naziv as klasa, a.naziv as tip, b.mana, concat_ws(' / ', b.attack, b.health) as stats, b.rarity
 						from tip a inner join karta b on a.sifra=b.tip inner join klasa c on b.klasa=c.sifra 
 						where concat(b.naziv, c.naziv, a.naziv, b.mana, concat_ws(' / ', b.attack, b.health), b.rarity)
@@ -91,49 +98,13 @@ provjeraOvlasti(); ?>
 						?>		
 	<div id="body">
 			<div class="header">
-				<ul class="dropdown menu" data-dropdown-menu>
-  
-   <li>
-    <a href="#">Select a deck</a>
-    <ul class="menu">
-    	<?php
-    	$izrazDeck=$veza->prepare("select * from deck;");
-		$izrazDeck->execute();
-		$decks=$izrazDeck->fetchAll(PDO::FETCH_OBJ);
-		foreach ($decks as $redDeck):
-   	 ?>
-      <li><a href="builder.php?sifra=<?php echo $redDeck->sifra; ?>"><?php echo $redDeck->naziv; ?></a></li>
-   
-    <?php endforeach;  ?>
-     </ul>
-   </li>
-    <?php if(!isset($_GET["sifra"])){
-		$izraz=$veza->prepare("select max(sifra) from deck;");
-		$izraz->execute();
-		$odabranDeck=$izraz->fetchColumn();
-	} else{
-    $odabranDeck=$_GET["sifra"];
-	$izraz=$veza->prepare("select naziv from deck where sifra=:sifraDeck;");
-	$izraz->bindValue("sifraDeck", $odabranDeck, PDO::PARAM_INT);
-	$izraz->execute();
-	$nazivDeck=$izraz->fetchColumn();
-	$izraz=$veza->prepare("select karta from karta_deck where deck=:odabranDeck");
-	$izraz->bindValue("odabranDeck", $odabranDeck, PDO::PARAM_INT);
-	$izraz->execute();
-	$karta=$izraz->fetchColumn();
-	$izraz=$veza->prepare("select klasa from karta where sifra=:karta");
-	$izraz->bindValue("karta", $karta, PDO::PARAM_INT);
-	$izraz->execute();
-	$klasa=$izraz->fetchColumn();
-	}
- 	?>
-    
-	</ul>
-
-
+				
 				<div class="tabl">
 					<div style="width: 1900px; height: 100px;">
-							
+						<?php
+						if(isset($nazivDeck)):?>
+							<h1 style="position: absolute; margin-top: 28px;"><?php echo $nazivDeck; ?></h1>
+						<?php endif; ?>
 					<form method="get">
 								<input type="text" name="uvjet" 
 								placeholder="uvjet pretraživanja"
@@ -180,18 +151,18 @@ provjeraOvlasti(); ?>
 											
 										</tbody>
 							</table>
-							<table id="inDeck" class="add" style="width: 50%; float:left;">
-								<thead>
+							<table id="inDeck" class="add" style="width: 50%; float: left; display: block;">
+								<thead style="display: inline-block; height: 43px; width: 100%;">
 									<tr>
-										<th>Name</th>
-										<th>Mana Cost</th>
-										<th>Attack / Health</th>
-										<th>Rarity</th>
+										<th style="height: 10px; line-height: 20px;">Name</th>
+										<th style="height: 10px; line-height: 20px;">Mana Cost</th>
+										<th style="height: 10px; line-height: 20px;">Attack / Health</th>
+										<th style="height: 10px; line-height: 20px;">Rarity</th>
 										<th class="dodaj"><i class="fas fa-plus-square"></i></th>
 										<th class="ukloni"><i class="fas fa-minus-square"></i></th>
 									</tr>
 								</thead>
-								<tbody>
+								<tbody style="height: 504px; overflow-y: auto; overflow-x: hidden; display: inline-block; width: 100%;">
 									<?php 
 									$izraz = $veza->prepare("select c.sifra, b.deck as sifraDeck, c.naziv, c.mana, concat_ws(' / ', c.attack, c.health) as stats, c.rarity
 									from deck a inner join karta_deck b on a.sifra=b.deck
@@ -204,11 +175,11 @@ provjeraOvlasti(); ?>
 									foreach ($inDeck as $red): 
 									?>
 									<tr>
-										<td class="naziv"><?php echo mb_strimwidth($red->naziv, 0, 30, "..."); ?></td>
-										<td class="mana"><?php echo $red->mana; ?></td>
-										<td class="stats"><?php echo $red->stats; ?></td>
-										<td class="rarity"><?php echo $red->rarity; ?></td>
-										<td class="dodaj">
+										<td class="naziv" style="width: 35%;"><?php echo mb_strimwidth($red->naziv, 0, 30, "..."); ?></td>
+										<td class="mana" style="width: 25%; text-align: center;"><?php echo $red->mana; ?></td>
+										<td class="stats" style="width: 30%; text-align: center;"><?php echo $red->stats; ?></td>
+										<td class="rarity" style="width: 30%;"><?php echo $red->rarity; ?></td>
+										<td class="dodaj" style="width: 40%;">
 											
 											<a class="dodajKartu" id="dk_<?php echo $red->sifraDeck; ?>_<?php echo $red->sifra; ?>" href="#"><i class="fas fa-plus-square"></i></a></td>
 										<td class="ukloni"><a class="ukloniKartu" id="uk_<?php echo $red->sifraDeck; ?>_<?php echo $red->sifra; ?>" href="#"><i class="fas fa-minus-square"></i></a></td>
@@ -226,8 +197,58 @@ provjeraOvlasti(); ?>
 					
 				</div>
 				
-				<a href="#" data-reveal-id="promjeniNaziv" type="button" class="promjeni" id="rn_<?php echo $_GET["sifra"]; ?>_<?php echo $nazivDeck ?>">Rename</a>
-				<a href="#" type="button" class="obrisi" id="dl_<?php echo $_GET["sifra"]; ?>_<?php echo $nazivDeck ?>">Delete</a>
+				<?php if($ukupnoRedova>$brojRezultataPoStranici){?>
+										<ul class="pagination text-center" role="navigation" style="position: absolute; left: 350px; margin-top: 10px;">
+				  <li class="pagination-previous"><a href="?stranica=<?php echo $stranica - 1; ?>&uvjet=<?php echo isset($_GET["uvjet"]) ? $_GET["uvjet"] : "" ?>">Previous</a></li>
+				 
+				  <li><?php echo $stranica ?> / <?php echo $ukupnoStranica; ?></li>
+				 
+				  <li class="pagination-next"><a href="?stranica=<?php echo $stranica + 1; ?>&uvjet=<?php echo isset($_GET["uvjet"]) ? $_GET["uvjet"] : "" ?>">Next</a></li>
+				</ul>
+							<?php		}?>
+				<div style="height: 100px; width: 230px; position: relative; left: 318px; border: none;	background: none;">
+				<a href="#" style="margin-top: 10px;" data-reveal-id="promjeniNaziv" type="button" class="promjeni" id="rn_<?php echo $_GET["sifra"]; ?>_<?php echo $nazivDeck ?>">Rename</a>
+				<a href="#" style="margin-top: 10px; margin-left: 10px;" type="button" class="obrisi" id="dl_<?php echo $_GET["sifra"]; ?>_<?php echo $nazivDeck ?>">Delete</a>
+				
+				</div>
+				<ul class="dropdown menu" data-dropdown-menu style="position: relative; bottom: 95px; left: 125px; text-align: center; width: 150px;">
+  
+   <li>
+    <a class="dropdown menu" style="width: 150px; text-align: center;"  href="#">Select a deck</a>
+    <ul class="menu">
+    	<?php
+    	$izrazDeck=$veza->prepare("select * from deck;");
+		$izrazDeck->execute();
+		$decks=$izrazDeck->fetchAll(PDO::FETCH_OBJ);
+		foreach ($decks as $redDeck):
+   	 ?>
+      <li><a href="builder.php?sifra=<?php echo $redDeck->sifra; ?>"><?php echo $redDeck->naziv; ?></a></li>
+   
+    <?php endforeach;  ?>
+     </ul>
+   </li>
+    <?php if(!isset($_GET["sifra"])){
+		$izraz=$veza->prepare("select max(sifra) from deck;");
+		$izraz->execute();
+		$odabranDeck=$izraz->fetchColumn();
+	} else{
+    $odabranDeck=$_GET["sifra"];
+	$izraz=$veza->prepare("select naziv from deck where sifra=:sifraDeck;");
+	$izraz->bindValue("sifraDeck", $odabranDeck, PDO::PARAM_INT);
+	$izraz->execute();
+	$nazivDeck=$izraz->fetchColumn();
+	$izraz=$veza->prepare("select karta from karta_deck where deck=:odabranDeck");
+	$izraz->bindValue("odabranDeck", $odabranDeck, PDO::PARAM_INT);
+	$izraz->execute();
+	$karta=$izraz->fetchColumn();
+	$izraz=$veza->prepare("select klasa from karta where sifra=:karta");
+	$izraz->bindValue("karta", $karta, PDO::PARAM_INT);
+	$izraz->execute();
+	$klasa=$izraz->fetchColumn();
+	}
+ 	?>
+    
+	</ul>
 			<div id="promjeniNaziv" class="reveal" data-reveal>
 						  <p id="naslov"></p>
 						  
@@ -363,6 +384,24 @@ provjeraOvlasti(); ?>
 			  }
 			});
         })
+        
+        // Change the selector if needed
+		var $table = $('table.add'),
+		    $bodyCells = $table.find('tbody tr:first').children(),
+		    colWidth;
+		
+		// Adjust the width of thead cells when window resizes
+		$(window).resize(function() {
+		    // Get the tbody columns width array
+		    colWidth = $bodyCells.map(function() {
+		        return $(this).width();
+		    }).get();
+		    
+		    // Set the width of thead columns
+		    $table.find('thead tr').children().each(function(i, v) {
+		        $(v).width(colWidth[i]);
+		    });    
+		}).resize(); // Trigger resize handler
         
     </script>
   </body>
